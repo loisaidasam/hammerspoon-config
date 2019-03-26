@@ -11,16 +11,23 @@
 -- via https://stackoverflow.com/questions/34743870/lua-hammerspoon-hs-window-focusedwindow-is-nil-when-assigned-to-a-variable
 
 
-local mash = {"cmd", "alt", "ctrl"}
+local MASH = {"cmd", "alt", "ctrl"}
+
+local MOVE_DELTA = 100
 
 -- Hello world
-hs.hotkey.bind(mash, "W", function()
+hs.hotkey.bind(MASH, "W", function()
   hs.notify.new({title="Hammerspoon", informativeText="Hello World"}):send()
 end)
 
 -- Reload config
-hs.hotkey.bind(mash, "R", function()
+hs.hotkey.bind(MASH, "R", function()
   hs.reload()
+end)
+
+-- TODO: Show the console
+hs.hotkey.bind(MASH, "C", function()
+  hs.console.hswindow():focus()
 end)
 
 -- Utility
@@ -31,86 +38,87 @@ end
 function moveWindow(xDelta, yDelta)
   local win = getWindow()
   local f = win:frame()
+
   f.x = f.x + xDelta
   f.y = f.y + yDelta
   win:setFrame(f)
 end
 
 -- Move windows around
-hs.hotkey.bind(mash, "J", function()
-  moveWindow(-100, 0)
+-- Left
+hs.hotkey.bind(MASH, "J", function()
+  moveWindow(-1 * MOVE_DELTA, 0)
 end)
-hs.hotkey.bind(mash, "I", function()
-  moveWindow(0, -100)
+-- Right
+hs.hotkey.bind(MASH, "L", function()
+  moveWindow(MOVE_DELTA, 0)
 end)
-hs.hotkey.bind(mash, "L", function()
-  moveWindow(100, 0)
+-- Up
+hs.hotkey.bind(MASH, "I", function()
+  moveWindow(0, -1 * MOVE_DELTA)
+end)
+-- Down
+hs.hotkey.bind(MASH, "K", function()
+  moveWindow(0, MOVE_DELTA)
 end)
 
 -- Do window grid stuff
--- TODO: Simplify this
-hs.hotkey.bind(mash, "Left", function()
+hs.hotkey.bind(MASH, "Left", function()
   local win = getWindow()
-  local f = win:frame()
-  local screen = win:screen()
-  local max = screen:frame()
+  local frame = win:frame()
+  local max = win:screen():frame()
 
-  -- Put screen in top left
-  f.x = max.x
-  f.y = max.y
+  -- Left
+  frame.x = max.x
   -- Half width
-  f.w = max.w / 2
-  -- Full height
-  f.h = max.h
-  win:setFrame(f)
+  frame.w = max.w / 2
+  win:setFrame(frame)
 end)
-hs.hotkey.bind(mash, "Right", function()
+hs.hotkey.bind(MASH, "Right", function()
   local win = getWindow()
-  local f = win:frame()
-  local screen = win:screen()
-  local max = screen:frame()
+  local frame = win:frame()
+  local max = win:screen():frame()
 
-  -- Put screen at top/middle
-  f.x = max.x + (max.w / 2)
-  f.y = max.y
+  -- Middle
+  frame.x = max.x + (max.w / 2)
   -- Half width
-  f.w = max.w / 2
-  -- Full height
-  f.h = max.h
-  win:setFrame(f)
+  frame.w = max.w / 2
+  win:setFrame(frame)
 end)
-hs.hotkey.bind(mash, "Up", function()
+hs.hotkey.bind(MASH, "Up", function()
   local win = getWindow()
-  local f = win:frame()
-  local screen = win:screen()
-  local max = screen:frame()
+  local frame = win:frame()
+  local max = win:screen():frame()
+
+  -- Top
+  frame.y = max.y
+  -- Half width
+  frame.h = max.h / 2
+  win:setFrame(frame)
+end)
+hs.hotkey.bind(MASH, "Down", function()
+  local win = getWindow()
+  local frame = win:frame()
+  local max = win:screen():frame()
+
+  -- Bottom
+  frame.y = max.y + (max.h / 2)
+  frame.h = max.h / 2
+  win:setFrame(frame)
+end)
+
+-- Full screen
+hs.hotkey.bind(MASH, "A", function()
+  local win = getWindow()
+  local frame = win:frame()
+  local max = win:screen():frame()
 
   -- Full screen
-  f.x = max.x
-  f.y = max.y
-  f.w = max.w
-  f.h = max.h
-  win:setFrame(f)
-end)
-hs.hotkey.bind(mash, "Down", function()
-  local win = getWindow()
-  local f = win:frame()
-  local screen = win:screen()
-  local max = screen:frame()
-
-  -- Half height
-  f.h = max.h / 2
-  win:setFrame(f)
-end)
-hs.hotkey.bind(mash, "K", function()
-  local win = getWindow()
-  local f = win:frame()
-  local screen = win:screen()
-  local max = screen:frame()
-
-  f.h = max.h / 2
-  f.y = max.y + (max.h / 2)
-  win:setFrame(f)
+  frame.x = max.x
+  frame.y = max.y
+  frame.w = max.w
+  frame.h = max.h
+  win:setFrame(frame)
 end)
 
 hs.alert.show("Config loaded")
