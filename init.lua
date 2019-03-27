@@ -37,11 +37,11 @@ function getWindow()
 end
 function moveWindow(xDelta, yDelta)
   local win = getWindow()
-  local f = win:frame()
+  local frame = win:frame()
 
-  f.x = f.x + xDelta
-  f.y = f.y + yDelta
-  win:setFrame(f)
+  frame.x = frame.x + xDelta
+  frame.y = frame.y + yDelta
+  win:setFrame(frame)
 end
 
 -- Move windows around
