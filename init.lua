@@ -120,4 +120,17 @@ hs.hotkey.bind(MASH, "Space", function()
   win:setFrame(frame)
 end)
 
+-- Middle of screen
+hs.hotkey.bind(MASH, "M", function()
+  local win = getWindow()
+  local frame = win:frame()
+  local max = win:screen():frame()
+
+  frame.x = max.x + (max.w / 4)
+  frame.w = max.w / 2
+  frame.y = max.y + (max.h / 4)
+  frame.h = max.h / 2
+  win:setFrame(frame)
+end)
+
 hs.alert.show("Config loaded")
