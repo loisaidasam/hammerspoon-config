@@ -108,12 +108,11 @@ hs.hotkey.bind(MASH, "Down", function()
 end)
 
 -- Full screen
-hs.hotkey.bind(MASH, "A", function()
+hs.hotkey.bind(MASH, "Space", function()
   local win = getWindow()
   local frame = win:frame()
   local max = win:screen():frame()
 
-  -- Full screen
   frame.x = max.x
   frame.y = max.y
   frame.w = max.w
