@@ -14,6 +14,7 @@
 local MASH = {"cmd", "alt", "ctrl"}
 
 local MOVE_DELTA = 100
+local EXPAND_DELTA = 50
 
 -- Hello world
 hs.hotkey.bind(MASH, "W", function()
@@ -104,6 +105,32 @@ hs.hotkey.bind(MASH, "Down", function()
   -- Bottom
   frame.y = max.y + (max.h / 2)
   frame.h = max.h / 2
+  win:setFrame(frame)
+end)
+
+-- Expand
+hs.hotkey.bind(MASH, "=", function()
+  local win = getWindow()
+  local frame = win:frame()
+  local max = win:screen():frame()
+
+  frame.x = frame.x - EXPAND_DELTA
+  frame.y = frame.y - EXPAND_DELTA
+  frame.w = frame.w + (2 * EXPAND_DELTA)
+  frame.h = frame.h + (2 * EXPAND_DELTA)
+  win:setFrame(frame)
+end)
+
+-- Contract
+hs.hotkey.bind(MASH, "-", function()
+  local win = getWindow()
+  local frame = win:frame()
+  local max = win:screen():frame()
+
+  frame.x = frame.x + EXPAND_DELTA
+  frame.y = frame.y + EXPAND_DELTA
+  frame.w = frame.w - (2 * EXPAND_DELTA)
+  frame.h = frame.h - (2 * EXPAND_DELTA)
   win:setFrame(frame)
 end)
 
