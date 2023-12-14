@@ -10,6 +10,9 @@
 -- and then check the box to allow Hammerspoon to control your computer
 -- via https://stackoverflow.com/questions/34743870/lua-hammerspoon-hs-window-focusedwindow-is-nil-when-assigned-to-a-variable
 
+-- List of allowed keycodes here:
+-- https://github.com/Hammerspoon/hammerspoon/blob/master/extensions/keycodes/init.lua
+
 
 local MASH = {"cmd", "alt", "ctrl"}
 
@@ -43,6 +46,20 @@ function moveWindow(xDelta, yDelta)
   frame.x = frame.x + xDelta
   frame.y = frame.y + yDelta
   win:setFrame(frame)
+end
+function fitToScreen(win)
+  local frame = win:frame()
+  local max = win:screen():frame()
+
+  frame.x = max.x
+  frame.y = max.y
+  frame.w = max.w
+  frame.h = max.h
+  win:setFrame(frame)
+end
+function fullscreen(win)
+  win:setFullScreen(true)
+  -- win:toggleFullScreen()
 end
 
 -- Move windows around
@@ -137,14 +154,9 @@ end)
 -- Full screen
 hs.hotkey.bind(MASH, "Space", function()
   local win = getWindow()
-  local frame = win:frame()
-  local max = win:screen():frame()
 
-  frame.x = max.x
-  frame.y = max.y
-  frame.w = max.w
-  frame.h = max.h
-  win:setFrame(frame)
+  fitToScreen(win)
+  -- fullscreen(win)
 end)
 
 -- Middle of screen
@@ -158,6 +170,24 @@ hs.hotkey.bind(MASH, "M", function()
   frame.y = max.y + (max.h / 4)
   frame.h = max.h / 2
   win:setFrame(frame)
+end)
+
+-- Move to right screen
+hs.hotkey.bind(MASH, "]", function()
+  local win = getWindow()
+  local screen = win:screen()
+
+  -- win = win:moveToScreen(screen:next())
+  win = win:moveToScreen(screen:previous())
+end)
+
+-- Move to left scdreen
+hs.hotkey.bind(MASH, "[", function()
+  local win = getWindow()
+  local screen = win:screen()
+
+  -- win = win:moveToScreen(screen:previous())
+  win = win:moveToScreen(screen:next())
 end)
 
 hs.alert.show("Config loaded")
